@@ -1,5 +1,6 @@
 ObstList = []; % Obstacle point list
 
+%给定障碍物世界坐标(x,y)
 for i = -25:25
     ObstList(end+1,:) = [i,30];
 end

@@ -3,6 +3,7 @@
 
 function path = FindRSPath(x,y,phi,veh)
     rmin = veh.MIN_CIRCLE; %minimum turning radius
+    %归一化
     x = x/rmin;
     y = y/rmin;
     % 遍历5种方法到达目标点，然后选取路径最短的一条
@@ -624,7 +625,7 @@ function [isok,path] = CCSCC(x,y,phi)
 end
 
 function PlotPath(path,veh)
-    rmin = veh.MIN_CIRCLE;
+    rmin = veh.MIN_CIRCLE;  %路径长度乘rmin用来得到真实路径长度 
     type = path.type;
     x = [];
     y = [];
@@ -633,7 +634,7 @@ function PlotPath(path,veh)
     for i = 1:5        
         if type(i) == 'S'
             theta = pvec(3);
-            dl = rmin*seg(i);
+            dl = rmin*seg(i);  
             dvec = [dl*cos(theta), dl*sin(theta), 0];
             dx = pvec(1)+linspace(0,dvec(1));
             dy = pvec(2)+linspace(0,dvec(2));

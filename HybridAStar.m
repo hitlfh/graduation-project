@@ -5,8 +5,8 @@ function [x,y,th,D,delta] = HybridAStar(Start,End,Vehicle,Configure)
     
     % 把起始的位姿(x,y,theta)转换为grid上的栅格索引
     [isok,xidx,yidx,thidx] = CalcIdx(Start(1),Start(2),Start(3),cfg);
-    if isok % 把位姿栅格定义为一个结点，形成链表结构
-        tnode = Node(xidx,yidx,thidx,mres,0,Start(1),Start(2),Start(3),[xidx,yidx,thidx],0);
+    if isok % 把位姿栅格定义为一个结点，形成链表结构  
+        tnode = Node(xidx,yidx,thidx,mres,0,Start(1),Start(2),Start(3),[xidx,yidx,thidx],0);  %初始节点的cost 是0
     end
     Open = [tnode]; % hybrid A*的Open集合，集合里是一个个Node类对象
     Close = [];
@@ -190,7 +190,7 @@ function [Open,Close] = Update(wknode,Open,Close,veh,cfg)
     end  
 end
 
-function [isok,idx] = inNodes(node,nodes)
+function [isok,idx] = inNodes(node,nodes)  %比较栅格值
     for i = 1:length(nodes)
         tnode = nodes(i);
         if node.xidx == tnode.xidx...
@@ -213,7 +213,7 @@ function [isok,tnode] = CalcNextNode(wknode,D,delta,veh,cfg)
     gres = cfg.XY_GRID_RESOLUTION;
     obstline = cfg.ObstLine;
     % 每条轨迹大概是2米的长度。这里乘以1.5是确保下一个末端状态肯定在另一个栅格中，不会还在一个栅格中！在地图栅格中子结点拓展。比如对角线长度是1.4，此时还是在同一个栅格中
-    nlist = floor(gres*1.5/cfg.MOTION_RESOLUTION)+1; %此处是定值31， 计算给定D和delta下，沿着一条路径上wknode的子结点的数目，以便填充数据     % 每条轨迹大概是2米的长度。这里乘以1.5是确保下一个末端状态肯定在另一个栅格中，不会还在一个栅格中！在地图栅格中子结点拓展。比如对角线长度是1.4，此时还是在同一个栅格中
+    nlist = floor(gres*1.5/cfg.MOTION_RESOLUTION)+1; %此处是定值31， 计算给定D和delta下，沿着一条路径上wknode的子结点的数目，以便填充数据     
     x = zeros(1,nlist+1);
     y = x;
     th = x;
@@ -379,8 +379,8 @@ end
 
 % 把位姿(x,y,theta)转换为grid上的栅格索引,如果不符合实际则isok=false
 function [isok,xidx,yidx,thidx] = CalcIdx(x,y,theta,cfg)
-    gres = cfg.XY_GRID_RESOLUTION;
-    yawres = cfg.YAW_GRID_RESOLUTION;
+    gres = cfg.XY_GRID_RESOLUTION;  %栅格XY分辨率
+    yawres = cfg.YAW_GRID_RESOLUTION;  %栅格化转角分辨率
     xidx = ceil((x-cfg.MINX)/gres);
     yidx = ceil((y-cfg.MINY)/gres);
     theta = wrapToPi(theta); % 控制theta范围在[-pi,pi]区间

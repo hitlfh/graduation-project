@@ -22,7 +22,7 @@ function costmap = GridAStar(obstlist,goal,gres)
     end    
 end
 
-function cost = AStarSearch(start,goal,obmap)
+function cost = AStarSearch(start,goal,obmap)   %这里的start 和 goal 都是行列坐标
     dim = size(obmap);
     Grids = zeros(dim(1),dim(2),4);
     for i = 1:dim(1)
@@ -93,10 +93,10 @@ function [wknode,Open] = PopOpen(Open,Grids)
         end
     end
     wknode = Open(minidx,:);
-    Open(minidx,:) = [];
+    Open(minidx,:) = [];   %把wknode 从open 列表中删除
 end
 
-%将世界坐标转换为栅格坐标
+%将世界坐标转换为栅格坐标,有障碍物栅格值为1，否则为0
 function [minx,miny,obmap] = CalcObstMap(obstlist,gres)
     minx = min(obstlist(:,1));
     maxx = max(obstlist(:,1));

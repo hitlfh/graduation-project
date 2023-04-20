@@ -1,15 +1,17 @@
 function VehicleAnimation(x,y,theta,cfg,veh)
-    sz=get(0,'screensize');   %sz = 1 1 1536 864  
+    sz=get(0,'screensize');   %sz = 1 1 1536 864   获取系统分辨率 这里是缩放125%之后的值
     figure('outerposition',sz);
     videoFWriter = VideoWriter('Parking.mp4','MPEG-4');
     open(videoFWriter);
     ObstList = cfg.ObstList;
-    scatter(ObstList(:,1),ObstList(:,2),15,'k','x') % 画散点图
+    scatter(ObstList(:,1),ObstList(:,2),15,'k','x') % 画障碍物地图散点图
     hold on
     axis equal
     xlim([cfg.MINX,cfg.MAXX]);
     ylim([cfg.MINY,cfg.MAXY]);
     plot(x,y,'b') % 规划出来的轨迹，蓝色曲线   
+
+    %一开始的时候先画出起始点的图像
     px = x(1);
     py = y(1);
     pth = theta(1);
@@ -25,7 +27,7 @@ function VehicleAnimation(x,y,theta,cfg,veh)
         [vehx,vehy] = getVehTran(px,py,pth,veh);
         h1.XData = vehx; % 更新h1图像句柄,把车辆边框四个角点的x坐标添加进去
         h1.YData = vehy;
-        h2.XData = px; % 更新h2图像句柄,把车辆边框四个角点的y坐标添加进去
+        h2.XData = px; % 更新h2图像句柄,把后轴中心的坐标添加进去
         h2.YData = py;
         img = getframe(gcf);
         writeVideo(videoFWriter,img);
